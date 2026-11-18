@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { renderFormattedText } from '../utils/formatText'
 
 export default function CodeExplanation({ explanation, repoMeta, techStack = [], highlights = [] }) {
   const renderedSections = useMemo(() => {
@@ -30,14 +31,14 @@ export default function CodeExplanation({ explanation, repoMeta, techStack = [],
             if (trimmed.startsWith('### ')) {
               return (
                 <h3 key={pIdx} className="section-title">
-                  {trimmed.replace('### ', '')}
+                  {renderFormattedText(trimmed.replace('### ', ''))}
                 </h3>
               )
             }
             if (trimmed.startsWith('## ')) {
               return (
                 <h2 key={pIdx} className="section-title main">
-                  {trimmed.replace('## ', '')}
+                  {renderFormattedText(trimmed.replace('## ', ''))}
                 </h2>
               )
             }
@@ -45,13 +46,19 @@ export default function CodeExplanation({ explanation, repoMeta, techStack = [],
               return (
                 <ul key={pIdx} className="bullet-list">
                   {trimmed.split('\n').map((item, iIdx) => (
-                    <li key={iIdx}>{item.replace(/^[-*]\s+/, '')}</li>
+                    <li key={iIdx}>
+                      {renderFormattedText(item.replace(/^[-*]\s+/, ''))}
+                    </li>
                   ))}
                 </ul>
               )
             }
 
-            return <p key={pIdx} className="prose-paragraph">{trimmed}</p>
+            return (
+              <p key={pIdx} className="prose-paragraph">
+                {renderFormattedText(trimmed)}
+              </p>
+            )
           })}
         </div>
       )
@@ -87,7 +94,7 @@ export default function CodeExplanation({ explanation, repoMeta, techStack = [],
             <ul className="highlight-bullets">
               {highlights.map((h, idx) => (
                 <li key={idx}>
-                  <span className="bullet-dot">•</span> {h}
+                  <span className="bullet-dot">•</span> {renderFormattedText(h)}
                 </li>
               ))}
             </ul>

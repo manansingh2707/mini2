@@ -64,7 +64,6 @@ export default async function handler(req, res) {
       highlights: explanationResult.highlights,
       techStack,
       architecture,
-      fileTree: fileTree.slice(0, 300),
       providerUsed: explanationResult.provider,
     })
   } catch (err) {

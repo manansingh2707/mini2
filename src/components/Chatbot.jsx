@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { renderFormattedText } from '../utils/formatText'
 
 const SUGGESTED_QUESTIONS = [
   'How do I run this locally?',
@@ -7,14 +8,14 @@ const SUGGESTED_QUESTIONS = [
   'What are the core dependencies?',
 ]
 
-export default function Chatbot({ repoMeta, techStack, explanation, architecture, fileTree = [] }) {
+export default function Chatbot({ repoMeta, techStack, explanation, architecture }) {
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
       role: 'assistant',
       content: `Hello. I can answer questions about the **${repoMeta?.fullName || 'this repository'}** codebase.
 
-You can ask about local setup, architectural design, specific files, or dependencies.`,
+You can ask about local setup, architectural design, specific components, or dependencies.`,
     },
   ])
   const [input, setInput] = useState('')
@@ -61,7 +62,6 @@ You can ask about local setup, architectural design, specific files, or dependen
             htmlUrl: repoMeta?.htmlUrl,
             readmeSnippet: explanation?.slice(0, 4000) || '',
             highlights: repoMeta?.highlights || [],
-            fileTree: fileTree.slice(0, 100),
             architecture: architecture || {},
           },
         }),
@@ -139,21 +139,35 @@ You can ask about local setup, architectural design, specific files, or dependen
             const trimmed = para.trim()
             if (!trimmed) return null
             if (trimmed.startsWith('### ')) {
-              return <h4 key={pIdx} className="chat-heading">{trimmed.replace('### ', '')}</h4>
+              return (
+                <h4 key={pIdx} className="chat-heading">
+                  {renderFormattedText(trimmed.replace('### ', ''))}
+                </h4>
+              )
             }
             if (trimmed.startsWith('## ')) {
-              return <h3 key={pIdx} className="chat-heading">{trimmed.replace('## ', '')}</h3>
+              return (
+                <h3 key={pIdx} className="chat-heading">
+                  {renderFormattedText(trimmed.replace('## ', ''))}
+                </h3>
+              )
             }
             if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
               return (
                 <ul key={pIdx} className="chat-list">
                   {trimmed.split('\n').map((item, iIdx) => (
-                    <li key={iIdx}>{item.replace(/^[-*]\s+/, '')}</li>
+                    <li key={iIdx}>
+                      {renderFormattedText(item.replace(/^[-*]\s+/, ''))}
+                    </li>
                   ))}
                 </ul>
               )
             }
-            return <p key={pIdx}>{trimmed}</p>
+            return (
+              <p key={pIdx}>
+                {renderFormattedText(trimmed)}
+              </p>
+            )
           })}
         </div>
       )

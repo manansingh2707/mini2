@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import ArchitectureFlow from './components/ArchitectureFlow'
 import Chatbot from './components/Chatbot'
-import CodeExplorer from './components/CodeExplorer'
 import CodeExplanation from './components/CodeExplanation'
 import './App.css'
 
@@ -9,7 +8,6 @@ const TABS = [
   { id: 'explanation', label: 'Explanation' },
   { id: 'architecture', label: 'Architecture' },
   { id: 'chatbot', label: 'Chat' },
-  { id: 'explorer', label: 'Files' },
 ]
 
 const EXAMPLE_REPOS = [
@@ -31,7 +29,6 @@ function App() {
   const [highlights, setHighlights] = useState([])
   const [techStack, setTechStack] = useState([])
   const [architecture, setArchitecture] = useState(null)
-  const [fileTree, setFileTree] = useState([])
 
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('repo_explainer_theme') || 'light'
@@ -78,7 +75,6 @@ function App() {
       setHighlights(data.highlights || [])
       setTechStack(data.techStack || [])
       setArchitecture(data.architecture)
-      setFileTree(data.fileTree || [])
       setActiveTab('explanation')
     } catch (err) {
       setError(err.message || 'Something went wrong while analyzing the repository.')
@@ -124,14 +120,6 @@ function App() {
             techStack={techStack}
             explanation={explanation}
             architecture={architecture}
-            fileTree={fileTree}
-          />
-        )
-      case 'explorer':
-        return (
-          <CodeExplorer
-            repoMeta={repoMeta}
-            fileTree={fileTree}
           />
         )
       default:
@@ -174,7 +162,7 @@ function App() {
         <section className="hero">
           <h1>GitHub Repository Explainer</h1>
           <p className="subtitle">
-            Understand any codebase in plain, simple English. Inspect system architecture, chat about the code, and browse repository files.
+            Understand any codebase in plain, simple English. Inspect system architecture and chat about the code.
           </p>
         </section>
 

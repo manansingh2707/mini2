@@ -11,7 +11,7 @@ function apiMiddlewarePlugin() {
         const parsedUrl = url.parse(req.url, true)
         const pathname = parsedUrl.pathname
 
-        if (pathname === '/api/analyze' || pathname === '/api/chat' || pathname === '/api/file') {
+        if (pathname === '/api/analyze' || pathname === '/api/chat') {
           // Parse JSON body if POST/PUT
           let body = {}
           if (req.method === 'POST' || req.method === 'PUT') {
@@ -65,10 +65,6 @@ function apiMiddlewarePlugin() {
             }
             if (pathname === '/api/chat') {
               const { default: handler } = await import('./api/chat.js')
-              return await handler(mockReq, mockRes)
-            }
-            if (pathname === '/api/file') {
-              const { default: handler } = await import('./api/file.js')
               return await handler(mockReq, mockRes)
             }
           } catch (err) {
